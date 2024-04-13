@@ -15,6 +15,16 @@ namespace TodoApi.Controllers
     {
         private readonly TodoContext _context;
 
+        public static TodoItemDTO ItemToDTO(TodoItem todoItem)
+        {
+            return new TodoItemDTO
+            {
+                Id = todoItem.Id,
+                Name = todoItem.Name,
+                IsComplete = todoItem.IsComplete
+            };
+        }
+
         public TodoItemsController(TodoContext context)
         {
             _context = context;
@@ -24,7 +34,9 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            return await _context.TodoItems.ToListAsync();
+            //return await _context.TodoItems.ToListAsync();
+            var todoItemsDTO = await _context.TodoItems.Select(x => ItemToDTO(x)).ToListAsync();
+            return Ok(todoItemsDTO);
         }
 
         // GET: api/TodoItems/5
